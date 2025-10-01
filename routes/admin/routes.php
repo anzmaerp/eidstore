@@ -122,7 +122,7 @@ Route::group(['prefix' => 'login'], function () {
     Route::post('/', [LoginController::class, 'login'])->name('login');
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin', 'actch:admin_panel']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
     Route::get('component', function () {
         return view('layouts.admin.component');
     });

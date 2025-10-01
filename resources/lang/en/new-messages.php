@@ -4043,4 +4043,8 @@ return [
 	"Active_the_addon_you_want_to_use_for_your_system" => "Active the addon you want to use for your system",
 	"want_to_inactive_this" => "Want to inactive this",
 	"Currently_no_product_available_by_this_name" => "Currently no product available by this name",
+	"Choose_which_social_login_options_you_want_to_offer_your_customers_for_accessing_the_app_and_website." => "Choose which social login options you want to offer your customers for accessing the app and website.",
+	"google_login_is_currently_disabled_from_configure_3rd_party_social_login_options." => "Google login is currently disabled from configure 3rd party social login options.",
+	"facebook_login_is_currently_disabled_from_configure_3rd_party_social_login_options." => "Facebook login is currently disabled from configure 3rd party social login options.",
+	"if_email_verification_is_on,_customers_must_verify_their_email_during_sign-up_to_ensure_a_secure_login_process." => "If email verification is on, customers must verify their email during sign-up to ensure a secure login process.",
 ];

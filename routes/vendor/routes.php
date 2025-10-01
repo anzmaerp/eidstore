@@ -53,7 +53,7 @@ use App\Http\Controllers\Vendor\ProductReportController;
 use App\Http\Controllers\Vendor\OrderReportController;
 use App\Http\Controllers\Vendor\VendorPaymentInfoController;
 
-Route::group(['middleware' => ['maintenance_mode', 'actch:admin_panel']], function () {
+Route::group(['middleware' => ['maintenance_mode']], function () {
 
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         /* authentication */

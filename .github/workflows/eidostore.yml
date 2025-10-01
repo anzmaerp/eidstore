@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - main
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          #server: ${{ secrets.ARBA_FTP_SERVER }}
+          server: ftp.wakp.net
+          #username: "${{ secrets.ARBA_FTP_USERNAME }}"
+          username: "main@eidostore.com"
+          #password: "${{ secrets.ARBA_FTP_PWD }}"
+          password: "pGfOyG3iP7FM"
+          server-dir: /public_html/
+          timeout: 7200
+          protocol: ftp
+          passive: true

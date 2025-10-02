@@ -4047,4 +4047,6 @@ return [
 	"google_login_is_currently_disabled_from_configure_3rd_party_social_login_options." => "Google login is currently disabled from configure 3rd party social login options.",
 	"facebook_login_is_currently_disabled_from_configure_3rd_party_social_login_options." => "Facebook login is currently disabled from configure 3rd party social login options.",
 	"if_email_verification_is_on,_customers_must_verify_their_email_during_sign-up_to_ensure_a_secure_login_process." => "If email verification is on, customers must verify their email during sign-up to ensure a secure login process.",
+	"no_payment_method_list" => "No payment method list",
+	"add_new_method" => "Add new method",
 ];

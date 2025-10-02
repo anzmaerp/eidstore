@@ -10,6 +10,6 @@ class PaymentRequest extends Model
 {
     use HasUuid;
     use HasFactory;
-
+    protected $guarded =[];
     protected $table = 'payment_requests';
 }

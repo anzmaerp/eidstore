@@ -1,48 +1,49 @@
 <?php
 
-use App\Enums\ViewPaths\Web\ProductCompare;
+use App\Enums\ViewPaths\Web\Review;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use App\Enums\ViewPaths\Web\ShopFollower;
-use App\Http\Controllers\Customer\Auth\CustomerAuthController;
-use App\Http\Controllers\Customer\Auth\ForgotPasswordController;
-use App\Http\Controllers\Customer\Auth\LoginController;
-use App\Http\Controllers\Customer\Auth\RegisterController;
-use App\Http\Controllers\Customer\Auth\SocialAuthController;
-use App\Http\Controllers\Customer\PaymentController;
-use App\Http\Controllers\Customer\SystemController;
+use App\Enums\ViewPaths\Web\ProductCompare;
+use App\Http\Controllers\Web\WebController;
 use App\Http\Controllers\Web\CartController;
-use App\Http\Controllers\Web\ChattingController;
-use App\Http\Controllers\Web\CouponController;
-use App\Http\Controllers\Web\DigitalProductDownloadController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\PageController;
+use App\Http\Controllers\Web\CouponController;
+use App\Http\Controllers\Web\ReviewController;
+use App\Http\Controllers\Web\ChattingController;
+use App\Http\Controllers\Web\CurrencyController;
+use App\Http\Controllers\Web\ShopViewController;
+use App\Http\Controllers\Web\UserWalletController;
+use App\Http\Controllers\Customer\SystemController;
+use App\Http\Controllers\Web\ProductListController;
+use App\Http\Controllers\Web\UserLoyaltyController;
+use App\Http\Controllers\Web\UserProfileController;
+use App\Http\Controllers\Customer\PaymentController;
 use App\Http\Controllers\Web\ProductCompareController;
 use App\Http\Controllers\Web\ProductDetailsController;
-use App\Http\Controllers\Web\ProductListController;
-use App\Http\Controllers\Web\Shop\ShopFollowerController;
-use App\Http\Controllers\Web\ShopViewController;
-use App\Http\Controllers\Web\UserProfileController;
-use App\Http\Controllers\Web\UserWalletController;
-use App\Http\Controllers\Web\WebController;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use App\Enums\ViewPaths\Web\Review;
-use App\Http\Controllers\Web\CurrencyController;
-use App\Http\Controllers\Web\PageController;
-use App\Http\Controllers\Web\ReviewController;
-use App\Http\Controllers\Web\UserLoyaltyController;
-use App\Http\Controllers\Payment_Methods\SslCommerzPaymentController;
-use App\Http\Controllers\Payment_Methods\StripePaymentController;
-use App\Http\Controllers\Payment_Methods\PaymobController;
-use App\Http\Controllers\Payment_Methods\FlutterwaveV3Controller;
+use App\Http\Controllers\Customer\Auth\LoginController;
 use App\Http\Controllers\Payment_Methods\PaytmController;
-use App\Http\Controllers\Payment_Methods\PaypalPaymentController;
-use App\Http\Controllers\Payment_Methods\PaytabsController;
+use App\Http\Controllers\Web\Shop\ShopFollowerController;
+use App\Http\Controllers\Customer\Auth\RegisterController;
 use App\Http\Controllers\Payment_Methods\LiqPayController;
+use App\Http\Controllers\Payment_Methods\PaymobController;
+use App\Http\Controllers\Payment_Methods\PaytabsController;
+use App\Http\Controllers\Customer\Auth\SocialAuthController;
+use App\Http\Controllers\Payment_Methods\FawaterkController;
+use App\Http\Controllers\Payment_Methods\PaystackController;
 use App\Http\Controllers\Payment_Methods\RazorPayController;
 use App\Http\Controllers\Payment_Methods\SenangPayController;
+use App\Http\Controllers\Customer\Auth\CustomerAuthController;
+use App\Http\Controllers\Web\DigitalProductDownloadController;
 use App\Http\Controllers\Payment_Methods\MercadoPagoController;
+use App\Http\Controllers\Customer\Auth\ForgotPasswordController;
 use App\Http\Controllers\Payment_Methods\BkashPaymentController;
-use App\Http\Controllers\Payment_Methods\PaystackController;
+use App\Http\Controllers\Payment_Methods\FlutterwaveV3Controller;
+use App\Http\Controllers\Payment_Methods\PaypalPaymentController;
+use App\Http\Controllers\Payment_Methods\StripePaymentController;
+use App\Http\Controllers\Payment_Methods\SslCommerzPaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,6 +54,7 @@ use App\Http\Controllers\Payment_Methods\PaystackController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/image-proxy', function () {
     $url = request('url');
     if (!$url) {
@@ -488,6 +490,13 @@ if (!$isGatewayPublished) {
             Route::any('pay', [PaytabsController::class, 'payment'])->name('pay');
             Route::any('callback', [PaytabsController::class, 'callback'])->name('callback');
             Route::any('response', [PaytabsController::class, 'response'])->name('response');
+        });
+
+        Route::group(['prefix' => 'fawaterk', 'as' => 'fawaterk.'], function () {
+            Route::get('/pay', [FawaterkController::class, 'index'])->name('pay');
+            Route::get('/success', [FawaterkController::class, 'success'])->name('success');
+            Route::get('/failed', [FawaterkController::class, 'failed'])->name('failed');
+            Route::get('/canceled', [FawaterkController::class, 'canceled'])->name('canceled');
         });
     });
 }

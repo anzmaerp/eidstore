@@ -77,7 +77,7 @@ class PaymentMethodController extends Controller
     {
         collect(['status'])->each(fn($item, $key) => $request[$item] = $request->has($item) ? (int)$request[$item] : 0);
         $validation = [
-            'gateway' => 'required|in:ssl_commerz,sixcash,worldpay,payfast,swish,esewa,maxicash,hubtel,viva_wallet,tap,thawani,moncash,pvit,ccavenue,foloosi,iyzi_pay,xendit,fatoorah,hyper_pay,amazon_pay,paypal,stripe,razor_pay,senang_pay,paytabs,paystack,paymob_accept,paytm,flutterwave,liqpay,bkash,mercadopago,cash_after_service,digital_payment,momo',
+            'gateway' => 'required|in:ssl_commerz,sixcash,worldpay,payfast,swish,esewa,maxicash,hubtel,viva_wallet,tap,thawani,moncash,pvit,ccavenue,foloosi,iyzi_pay,xendit,fatoorah,hyper_pay,amazon_pay,paypal,stripe,razor_pay,senang_pay,paytabs,paystack,paymob_accept,paytm,flutterwave,liqpay,bkash,mercadopago,cash_after_service,digital_payment,momo,fawaterk',
             'mode' => 'required|in:live,test'
         ];
 
@@ -305,7 +305,15 @@ class PaymentMethodController extends Controller
                 'status' => 'required|in:1,0',
                 'api_key' => 'required',
             ];
+        } elseif ($request['gateway'] == 'fawaterk') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'vendor_key' => 'required',
+                'provider_key' => 'required',
+            ];
         }
+
+
 
         $request->validate(array_merge($validation, $additional_data));
 

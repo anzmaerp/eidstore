@@ -1,0 +1,3 @@
+INSERT INTO eidstore.addon_settings
+(id, key_name, live_values, test_values, settings_type, mode, is_active, created_at, updated_at, additional_data)
+VALUES('e1a3f2c0-1234-11ee-9c99-0c7a158e4469', 'fawaterk', '{"gateway":"fawaterk","mode":"test","status":0,"vendor_key":"8f9e810b43f67d1e7e9b5217848e9226f1bfb9b8b5e08b34fb","provider_key":"FAWATERAK.1433"}', '{"gateway":"fawaterk","mode":"test","status":0,"vendor_key":"8f9e810b43f67d1e7e9b5217848e9226f1bfb9b8b5e08b34fb","provider_key":"FAWATERAK.1433"}', 'payment_config', 'test', 1, NULL, '2025-10-02 13:57:54', '{"gateway_title":"Fawaterk","gateway_image":null}');

@@ -1080,15 +1080,21 @@ trait UpdateClass
                             'merchant_id' => $decoded_value['paytm_merchant_mid'],
                             'merchant_website_link' => $decoded_value['paytm_merchant_website'],
                         ];
-                    } elseif ($gateway == 'bkash') {
-                        $additional_data = [
-                            'status' => $decoded_value['status'],
-                            'app_key' => $decoded_value['api_key'],
-                            'app_secret' => $decoded_value['api_secret'],
-                            'username' => $decoded_value['username'],
-                            'password' => $decoded_value['password'],
-                        ];
-                    }
+                        } elseif ($gateway == 'bkash') {
+                            $additional_data = [
+                                'status' => $decoded_value['status'],
+                                'app_key' => $decoded_value['api_key'],
+                                'app_secret' => $decoded_value['api_secret'],
+                                'username' => $decoded_value['username'],
+                                'password' => $decoded_value['password'],
+                            ];
+                        } elseif ($gateway == 'fawaterk') {
+                            $additional_data = [
+                                'status' => $decoded_value['status'],
+                                'vendor_key' => $decoded_value['vendor_key'],
+                                'provider_key' => $decoded_value['provider_key'],
+                            ];
+                        }
 
                     $credentials = json_encode(array_merge($data, $additional_data));
 

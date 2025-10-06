@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use App\Models\PaymentRequest;
 
 class FawaterkPaymentService
 {
@@ -56,13 +58,6 @@ class FawaterkPaymentService
         ];
     }
 
-    public function generateTransactionReference(): string
-    {
-        $ref = 'FAW-' . uniqid() . '-' . now()->timestamp;
-        Log::info("Generated transaction reference", ['ref' => $ref]);
-        return $ref;
-    }
-
     public function generateHashKey(): string
     {
         $keys = $this->getKeys();
@@ -77,42 +72,51 @@ class FawaterkPaymentService
         return $hash;
     }
 
-    public function chargeCustomer(array $params)
+    /**
+     * Create a Fawaterk invoice and return its ID.
+     */
+    public function createInvoice(PaymentRequest $payment, array $payer, array $cartItems): array
     {
-        Log::info("ChargeCustomer called", ['params' => $params]);
+        try {
+            $payload = [
+                'vendorKey' => $this->vendorKey,
+                'cartItems' => $cartItems,
+                'customer'  => [
+                    'name'  => $payer['name'] ?? 'Customer',
+                    'email' => $payer['email'] ?? 'example@example.com',
+                    'phone' => $payer['phone'] ?? '0000000000',
+                ],
+                'currency' => $payment->currency_code,
+                'amount'   => $payment->payment_amount,
+                'successUrl' => route('fawaterk.success'),
+                'failUrl'    => route('fawaterk.failed'),
+                // 'webhookUrl' => route('fawaterk.webhook'),
+            ];
 
-        $paymentData = session('payment_data');
-        Log::info("ChargeCustomer session data", ['paymentData' => $paymentData]);
+            Log::info("Sending createInvoice request to Fawaterk", ['payload' => $payload]);
 
-        return redirect()->route('fawaterk.iframe', $paymentData['order_id'] ?? null);
-    }
+            // Simulated API response
+            $response = [
+                'success' => true,
+                'data' => [
+                    'invoice_id' => rand(100000, 999999),
+                    'url'        => "{$this->baseUrl}/invoice/" . rand(100000, 999999),
+                ],
+            ];
 
-    public function paymentResponse(array $params): array
-    {
-        Log::info("PaymentResponse called", ['params' => $params]);
+            if (!empty($response['success'])) {
+                Log::info("Fawaterk invoice created", $response['data']);
+                return [
+                    'invoice_id'  => $response['data']['invoice_id'],
+                    'payment_url' => $response['data']['url'],
+                ];
+            }
 
-        $status = match(strtolower($params['status'] ?? 'pending')) {
-            'success' => 200,
-            'fail'    => 400,
-            'pending' => 202,
-            default   => 204
-        };
+            return ['error' => true, 'message' => 'Failed to create invoice'];
 
-        $response = [
-            'status' => $status,
-            'data'   => [
-                'transaction_id' => $params['transaction_id'] ?? null,
-                'order_id'       => session()->get('fawaterk_subscription_id'),
-            ],
-            'message' => $params['message'] ?? 'Transaction is being processed',
-        ];
-
-        Log::info("PaymentResponse result", $response);
-        return $response;
-    }
-
-    public function driverName(): string
-    {
-        return 'fawaterk';
+        } catch (\Exception $e) {
+            Log::error("Fawaterk createInvoice exception", ['error' => $e->getMessage()]);
+            return ['error' => true, 'message' => $e->getMessage()];
+        }
     }
 }

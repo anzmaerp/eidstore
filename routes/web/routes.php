@@ -496,6 +496,7 @@ if (!$isGatewayPublished) {
             Route::get('/pay', [FawaterkController::class, 'index'])->name('pay');
             Route::get('/success', [FawaterkController::class, 'success'])->name('success');
             Route::get('/failed', [FawaterkController::class, 'failed'])->name('failed');
+            Route::get('/pending', [FawaterkController::class, 'pending'])->name('pending');
             Route::get('/canceled', [FawaterkController::class, 'canceled'])->name('canceled');
         });
     });

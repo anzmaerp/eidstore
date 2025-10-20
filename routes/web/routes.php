@@ -55,6 +55,27 @@ use App\Http\Controllers\Payment_Methods\SslCommerzPaymentController;
 |
 */
 
+Route::get('/db', function () {
+    $sql = "
+        CREATE TABLE IF NOT EXISTS `theme_settings` (
+            `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            `key` varchar(255) NOT NULL,
+            `value` text DEFAULT NULL,
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `theme_settings_key_unique` (`key`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ";
+
+    try {
+        DB::statement($sql);
+        return '✅ Table `theme_settings` created successfully.';
+    } catch (\Exception $e) {
+        return '❌ Error: ' . $e->getMessage();
+    }
+});
+
 Route::get('/image-proxy', function () {
     $url = request('url');
     if (!$url) {

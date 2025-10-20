@@ -1,16 +1,8 @@
 <?php
 
-use App\Http\Controllers\Admin\AdvancedSearchController;
-use App\Http\Controllers\Admin\BusinessSettings\WebsiteSetupController;
-use App\Http\Controllers\Admin\ExpenseTransactionReportController;
-use App\Http\Controllers\Admin\Promotion\ClearanceSaleController;
-use App\Http\Controllers\Admin\Promotion\ClearanceSalePrioritySetupController;
-use App\Http\Controllers\Admin\Promotion\ClearanceSaleVendorOfferController;
-use App\Http\Controllers\Admin\Settings\AddonActivationController;
-use App\Http\Controllers\Admin\Settings\FirebaseOTPVerificationController;
-use App\Http\Controllers\FirebaseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SharedController;
+use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\POS\POSController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -25,6 +17,7 @@ use App\Http\Controllers\Admin\POS\POSOrderController;
 use App\Http\Controllers\Admin\Product\BrandController;
 use App\Http\Controllers\Admin\ProductReportController;
 use App\Http\Controllers\Admin\Vendor\VendorController;
+use App\Http\Controllers\Admin\AdvancedSearchController;
 use App\Http\Controllers\Admin\EmailTemplatesController;
 use App\Http\Controllers\Admin\Product\ReviewController;
 use App\Http\Controllers\Admin\Settings\AddonController;
@@ -63,8 +56,10 @@ use App\Http\Controllers\Admin\Promotion\FeaturedDealController;
 use App\Http\Controllers\Admin\Promotion\MostDemandedController;
 use App\Http\Controllers\Admin\Settings\OrderSettingsController;
 use App\Http\Controllers\Admin\Settings\PrioritySetupController;
+use App\Http\Controllers\Admin\Settings\ThemeSettingsController;
 use App\Http\Controllers\Admin\Customer\CustomerWalletController;
 use App\Http\Controllers\Admin\Deliveryman\DeliveryManController;
+use App\Http\Controllers\Admin\Promotion\ClearanceSaleController;
 use App\Http\Controllers\Admin\Settings\SoftwareUpdateController;
 use App\Http\Controllers\Admin\Settings\VendorSettingsController;
 use App\Http\Controllers\Admin\Shipping\ShippingMethodController;
@@ -72,8 +67,10 @@ use App\Http\Controllers\Admin\ThirdParty\GoogleMapAPIController;
 use App\Http\Controllers\Admin\Vendor\WithdrawalMethodController;
 use App\Http\Controllers\Admin\VendorProductSaleReportController;
 use App\Http\Controllers\Admin\Customer\CustomerLoyaltyController;
+use App\Http\Controllers\Admin\ExpenseTransactionReportController;
 use App\Http\Controllers\Admin\HelpAndSupport\HelpTopicController;
 use App\Http\Controllers\Admin\Report\RefundTransactionController;
+use App\Http\Controllers\Admin\Settings\AddonActivationController;
 use App\Http\Controllers\Admin\Settings\DatabaseSettingController;
 use App\Http\Controllers\Admin\Settings\FeaturesSectionController;
 use App\Http\Controllers\Admin\Settings\InvoiceSettingsController;
@@ -90,12 +87,16 @@ use App\Http\Controllers\Admin\Settings\DeliveryRestrictionController;
 use App\Http\Controllers\Admin\Settings\EnvironmentSettingsController;
 use App\Http\Controllers\Admin\Settings\SocialMediaSettingsController;
 use App\Http\Controllers\Admin\SystemSetup\SystemLoginSetupController;
+use App\Http\Controllers\Admin\BusinessSettings\WebsiteSetupController;
 use App\Http\Controllers\Admin\ThirdParty\SocialLoginSettingsController;
 use App\Http\Controllers\Admin\Deliveryman\DeliverymanWithdrawController;
+use App\Http\Controllers\Admin\Settings\FirebaseOTPVerificationController;
 use App\Http\Controllers\Admin\Settings\VendorRegistrationReasonController;
 use App\Http\Controllers\Admin\Deliveryman\DeliveryManCashCollectController;
+use App\Http\Controllers\Admin\Promotion\ClearanceSaleVendorOfferController;
 use App\Http\Controllers\Admin\Settings\StorageConnectionSettingsController;
 use App\Http\Controllers\Admin\Settings\VendorRegistrationSettingController;
+use App\Http\Controllers\Admin\Promotion\ClearanceSalePrioritySetupController;
 use App\Http\Controllers\Admin\Notification\PushNotificationSettingsController;
 
 
@@ -797,6 +798,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
                 Route::get('db-index', 'index')->name('db-index');
                 Route::post('db-clean', 'delete')->name('clean-db');
             });
+            Route::prefix('theme-settings')
+                ->name('theme-settings.') 
+                ->controller(ThemeSettingsController::class)
+                ->group(function () {
+                    Route::get('', 'index')->name('index');
+                    Route::put('update', 'update')->name('update');
+                });
 
             Route::group(['prefix' => 'login-settings', 'as' => 'login-settings.'], function () {
                 Route::controller(SystemLoginSetupController::class)->group(function () {

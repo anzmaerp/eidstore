@@ -42,6 +42,12 @@
                 {{ translate('Clean_Database') }}
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ Request::is('admin/system-setup/theme-settings') ?'active' : '' }}"
+               href="{{ route('admin.system-setup.theme-settings.index') }}">
+                {{ translate('theme_settings') }}
+            </a>
+        </li>
 
     </ul>
     <div class="nav--tab__prev">

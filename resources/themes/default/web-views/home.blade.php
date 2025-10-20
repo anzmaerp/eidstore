@@ -1,6 +1,5 @@
 @extends('layouts.front-end.app')
-
-@section('title', $web_config['company_name'].' '.translate('online_Shopping').' | '.$web_config['company_name'].' '.translate('ecommerce'))
+ @section('title', $web_config['company_name'].' '.translate('online_Shopping').' | '.$web_config['company_name'].' '.translate('ecommerce'))
 
 @push('css_or_js')
     <meta name="robots" content="index, follow">

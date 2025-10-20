@@ -23,5 +23,8 @@
         <li class="{{ Request::is('admin/business-settings/web-config/db-index') ?'active':'' }}">
             <a href="{{route('admin.system-setup.db-index') }}">{{ translate('Clean_Database') }}</a>
         </li>
+        <li class="{{ Request::is('admin/business-settings/theme-settings') ?'active':'' }}">
+            <a href="{{route('admin.system-setup.theme-settings.index') }}">{{ translate('theme_settings') }}</a>
+        </li>
     </ul>
 </div>

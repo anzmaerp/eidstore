@@ -4069,4 +4069,12 @@ return [
 	"Color images is required!" => "Color images is required!",
 	"your_order_is_being_processed_and_will_be_completed." => "Your order is being processed and will be completed.",
 	"You_will_receive_an_email_confirmation_when_your_order_is_placed." => "You will receive an email confirmation when your order is placed.",
+	"theme_settings" => "Theme settings",
+	"font_type" => "Font type",
+	"Light Theme" => "Light Theme",
+	"Primary Color 1" => "Primary Color 1",
+	"Color Theme" => "Color Theme",
+	"Theme Customization" => "Theme Customization",
+	"messages.theme_settings_added_successfully" => "Messages.theme settings added successfully",
+	"Please_upload_the_file_first" => "Please upload the file first",
 ];

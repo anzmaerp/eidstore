@@ -3,9 +3,6 @@
 namespace App\Utils;
 
 use App\Models\AddFundBonusCategories;
-use App\Models\OrderStatusHistory;
-use App\Models\ShippingMethod;
-use App\Models\Shop;
 use App\Models\Admin;
 use App\Models\BusinessSetting;
 use App\Models\Category;
@@ -14,14 +11,19 @@ use App\Models\Coupon;
 use App\Models\Currency;
 use App\Models\NotificationMessage;
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use App\Models\Seller;
 use App\Models\Setting;
-use App\Traits\CommonTrait;
+use App\Models\ShippingMethod;
+use App\Models\Shop;
+use App\Models\ThemeSetting;
 use App\Models\User;
+use App\Traits\CommonTrait;
 use App\Utils\CartManager;
 use App\Utils\OrderManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -30,21 +32,57 @@ class Helpers
 {
     use CommonTrait;
 
+    public static function getThemeSetting($key, $default = null)
+    {
+        static $themeSettings;
+
+        if (!$themeSettings) {
+            $themeSettings = ThemeSetting::pluck('value', 'key')->toArray();
+        }
+
+        return $themeSettings[$key] ?? $default;
+    }
+
+    public static function getGoogleFontsList()
+    {
+        $apiKey = config('services.google_fonts.api_key');
+
+        if (!$apiKey) {
+            return ['Roboto' => 'Roboto'];
+        }
+
+        $url = "https://www.googleapis.com/webfonts/v1/webfonts?key={$apiKey}";
+
+        try {
+            $response = Http::get($url);
+            if ($response->ok()) {
+                $data = $response->json();
+                $fonts = [];
+
+                foreach ($data['items'] ?? [] as $font) {
+                    $fonts[$font['family']] = $font['family'];
+                }
+
+                return $fonts;
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Google Fonts API Error: ' . $e->getMessage());
+        }
+
+        return ['Roboto' => 'Roboto'];
+    }
+
     public static function getCustomerInformation($request = null)
     {
         $user = null;
         if (auth('customer')->check()) {
             $user = auth('customer')->user();
-
         } elseif (is_object($request) && method_exists($request, 'user')) {
             $user = $request->user() ?? $request->user;
-
         } elseif (isset($request['payment_request_from']) && in_array($request['payment_request_from'], ['app']) && !isset($request->user)) {
             $user = $request['is_guest'] ? 'offline' : User::find($request['customer_id']);
-
         } elseif (session()->has('customer_id') && !session('is_guest')) {
             $user = User::find(session('customer_id'));
-
         } elseif (isset($request->user)) {
             $user = $request->user;
         } elseif (isset($request['payment_request_from']) && $request['payment_request_from'] == 'app' && isset($request->customer_id) && $request->is_guest != 1) {
@@ -63,13 +101,15 @@ class Helpers
         $discount = 0;
         $user = Helpers::get_customer($request);
         $couponLimit = Order::where('customer_id', $user->id)
-            ->where('coupon_code', $request['coupon_code'])->count();
+            ->where('coupon_code', $request['coupon_code'])
+            ->count();
 
         $coupon = Coupon::where(['code' => $request['coupon_code']])
             ->where('limit', '>', $couponLimit)
             ->where('status', '=', 1)
             ->whereDate('start_date', '<=', Carbon::parse()->toDateString())
-            ->whereDate('expire_date', '>=', Carbon::parse()->toDateString())->first();
+            ->whereDate('expire_date', '>=', Carbon::parse()->toDateString())
+            ->first();
 
         if (isset($coupon)) {
             $total = 0;
@@ -134,7 +174,6 @@ class Helpers
         }
     }
 
-
     public static function set_data_format($data)
     {
         $colors = is_array($data['colors']) ? $data['colors'] : json_decode($data['colors']);
@@ -165,15 +204,15 @@ class Helpers
 
         $variation = [];
         $data['category_ids'] = is_array($data['category_ids']) ? $data['category_ids'] : json_decode($data['category_ids']);
-//        $data['images'] = is_array($data['images']) ? $data['images'] : json_decode($data['images']);
+        //        $data['images'] = is_array($data['images']) ? $data['images'] : json_decode($data['images']);
         $data['colors'] = $colors;
-//        $data['color_image'] = $colorImage;
+        //        $data['color_image'] = $colorImage;
         $data['colors_formatted'] = $colorsFormatted;
         $attributes = [];
         if ((is_array($data['attributes']) ? $data['attributes'] : json_decode($data['attributes'])) != null) {
             $attributes_arr = is_array($data['attributes']) ? $data['attributes'] : json_decode($data['attributes']);
             foreach ($attributes_arr as $attribute) {
-                $attributes[] = (integer)$attribute;
+                $attributes[] = (int) $attribute;
             }
         }
         $data['attributes'] = $attributes;
@@ -182,16 +221,15 @@ class Helpers
         foreach ($variation_arr as $var) {
             $variation[] = [
                 'type' => $var['type'],
-                'price' => (double)$var['price'],
+                'price' => (float) $var['price'],
                 'sku' => $var['sku'],
-                'qty' => (integer)$var['qty'],
+                'qty' => (int) $var['qty'],
             ];
         }
         $data['variation'] = $variation;
 
         return $data;
     }
-
 
     public static function setDataFormatForJsonData($data): mixed
     {
@@ -237,7 +275,7 @@ class Helpers
         if ((isset($data['attributes']) && is_array($data['attributes']) ? $data['attributes'] : json_decode($data['attributes'] ?? '')) != null) {
             $attributes_arr = is_array($data['attributes']) ? $data['attributes'] : json_decode($data['attributes']);
             foreach ($attributes_arr as $attribute) {
-                $attributes[] = (integer)$attribute;
+                $attributes[] = (int) $attribute;
             }
         }
         $data['attributes'] = $attributes;
@@ -246,9 +284,9 @@ class Helpers
         foreach ($variation_arr as $var) {
             $variation[] = [
                 'type' => $var['type'],
-                'price' => (double)$var['price'],
+                'price' => (float) $var['price'],
                 'sku' => $var['sku'],
-                'qty' => (integer)$var['qty'],
+                'qty' => (int) $var['qty'],
             ];
         }
         $data['variation'] = $variation;
@@ -299,7 +337,7 @@ class Helpers
     {
         return [
             'ssl_commerz', 'paypal', 'stripe', 'razor_pay', 'paystack', 'senang_pay', 'paymob_accept',
-            'flutterwave', 'paytm', 'paytabs', 'liqpay', 'mercadopago', 'bkash','fawaterk'
+            'flutterwave', 'paytm', 'paytabs', 'liqpay', 'mercadopago', 'bkash', 'fawaterk'
         ];
     }
 
@@ -443,7 +481,7 @@ class Helpers
     {
         $user_role = auth('admin')->user()?->role;
         $permission = $user_role?->module_access ?? '';
-        if (isset($permission) && $user_role?->status == 1 && in_array($mod_name, (array)json_decode($permission)) == true) {
+        if (isset($permission) && $user_role?->status == 1 && in_array($mod_name, (array) json_decode($permission)) == true) {
             return true;
         }
 
@@ -474,23 +512,24 @@ class Helpers
         return $price;
     }
 
-
-    /** push notification variable message format  */
+    /**
+     * push notification variable message format
+     */
     public static function text_variable_data_format($value, $key = null, $user_name = null, $shopName = null, $delivery_man_name = null, $time = null, $order_id = null)
     {
         $data = $value;
         if ($data) {
             $order = $order_id ? Order::find($order_id) : null;
-            $data = $user_name ? str_replace("{userName}", $user_name, $data) : $data;
-            $data = $shopName ? str_replace("{shopName}", $shopName, $data) : $data;
-            $data = $delivery_man_name ? str_replace("{deliveryManName}", $delivery_man_name, $data) : $data;
-            $data = $key == 'expected_delivery_date' ? ($order ? str_replace("{time}", $order->expected_delivery_date, $data) : $data) : ($time ? str_replace("{time}", $time, $data) : $data);
-            $data = $order_id ? str_replace("{orderId}", $order_id, $data) : $data;
+            $data = $user_name ? str_replace('{userName}', $user_name, $data) : $data;
+            $data = $shopName ? str_replace('{shopName}', $shopName, $data) : $data;
+            $data = $delivery_man_name ? str_replace('{deliveryManName}', $delivery_man_name, $data) : $data;
+            $data = $key == 'expected_delivery_date' ? ($order ? str_replace('{time}', $order->expected_delivery_date, $data) : $data) : ($time ? str_replace('{time}', $time, $data) : $data);
+            $data = $order_id ? str_replace('{orderId}', $order_id, $data) : $data;
         }
         return $data;
     }
 
-    /* end **/
+    /* end */
     public static function push_notificatoin_message($key, $user_type, $lang)
     {
         try {
@@ -524,7 +563,7 @@ class Helpers
             ];
             $data = NotificationMessage::with(['translations' => function ($query) use ($lang) {
                 $query->where('locale', $lang);
-            }])->where(['key' => $notification_key[$key], 'user_type' => $user_type])->first() ?? ["status" => 0, "message" => "", "translations" => []];
+            }])->where(['key' => $notification_key[$key], 'user_type' => $user_type])->first() ?? ['status' => 0, 'message' => '', 'translations' => []];
             if ($data) {
                 if ($data['status'] == 0) {
                     return 0;
@@ -537,18 +576,15 @@ class Helpers
         }
     }
 
-
     /**
      * Device wise notification send
      */
-
     public static function send_push_notif_to_device($fcm_token, $data)
     {
         $key = BusinessSetting::where(['type' => 'push_notification_key'])->first()->value;
-        $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array("authorization: key=" . $key . "",
-            "content-type: application/json"
-        );
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $header = array('authorization: key=' . $key . '',
+            'content-type: application/json');
 
         if (isset($data['order_id']) == false) {
             $data['order_id'] = null;
@@ -582,7 +618,7 @@ class Helpers
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
@@ -593,7 +629,6 @@ class Helpers
 
         return $result;
     }
-
 
     public static function get_seller_by_token($request)
     {
@@ -615,7 +650,6 @@ class Helpers
         ];
     }
 
-
     public static function getSellerByToken($request)
     {
         $token = explode(' ', $request->header('authorization'));
@@ -630,8 +664,11 @@ class Helpers
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") Helpers::remove_dir($dir . "/" . $object); else unlink($dir . "/" . $object);
+                if ($object != '.' && $object != '..') {
+                    if (filetype($dir . '/' . $object) == 'dir')
+                        Helpers::remove_dir($dir . '/' . $object);
+                    else
+                        unlink($dir . '/' . $object);
                 }
             }
             reset($objects);
@@ -693,11 +730,11 @@ class Helpers
         curl_setopt_array($curl, array(
             CURLOPT_URL => route(base64_decode('YWN0aXZhdGlvbi1jaGVjaw==')),
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
+            CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_CUSTOMREQUEST => 'GET',
         ));
         $response = curl_exec($curl);
         $data = json_decode($response, true);
@@ -801,7 +838,7 @@ class Helpers
         foreach ($bonuses as $key => $item) {
             $item->applied_bonus_amount = $item->bonus_type == 'percentage' ? ($amount * $item->bonus_amount) / 100 : $item->bonus_amount;
 
-            //max bonus check
+            // max bonus check
             if ($item->bonus_type == 'percentage' && $item->applied_bonus_amount > $item->max_bonus_amount) {
                 $item->applied_bonus_amount = $item->max_bonus_amount;
             }
@@ -827,12 +864,10 @@ class Helpers
     {
         $shop = Shop::where('author_type', 'admin')->first();
         if (!$shop) {
-
             $shopBanner = getWebConfig(name: 'shop_banner');
             $offerBanner = getWebConfig(name: 'offer_banner');
             $bottomBanner = getWebConfig(name: 'bottom_banner');
             $companyFavIcon = getWebConfig(name: 'company_fav_icon');
-
 
             $vacationConfig = getWebConfig(name: 'vacation_add');
             $temporaryClose = getWebConfig(name: 'temporary_close');
@@ -885,7 +920,6 @@ class Helpers
         return $shop;
     }
 }
-
 
 if (!function_exists('currency_symbol')) {
     function currency_symbol()
@@ -944,7 +978,7 @@ if (!function_exists('get_shop_name')) {
 if (!function_exists('format_biginteger')) {
     function format_biginteger($value)
     {
-        $suffixes = ["1t+" => 1000000000000, "B+" => 1000000000, "M+" => 1000000, "K+" => 1000];
+        $suffixes = ['1t+' => 1000000000000, 'B+' => 1000000000, 'M+' => 1000000, 'K+' => 1000];
         foreach ($suffixes as $suffix => $factor) {
             if ($value >= $factor) {
                 $div = $value / $factor;
@@ -1033,5 +1067,3 @@ if (!function_exists('currency_converter')) {
         return Helpers::set_symbol(round($amount * $rate, 2));
     }
 }
-
-

@@ -48,12 +48,12 @@
                 {{ translate('Refund') }}
             </a>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link {{ Request::is('admin/business-settings/shipping-method/index') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.shipping-method.index') }}">
                 {{ translate('Shipping_Method') }}
             </a>
-        </li>
+        </li> --}}
         <li class="nav-item">
             <a class="nav-link {{ Request::is('admin/business-settings/delivery-zone') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.delivery-zone.index') }}">

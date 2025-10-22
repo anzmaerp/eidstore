@@ -360,7 +360,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="{{ Request::is('admin/products/list/vendor*')||(Request::is('admin/products/view/vendor/*'))||Request::is('admin/products/updated-product-list') ? 'sub-menu-opened' : '' }}">
+                {{-- <li class="{{ Request::is('admin/products/list/vendor*')||(Request::is('admin/products/view/vendor/*'))||Request::is('admin/products/updated-product-list') ? 'sub-menu-opened' : '' }}">
                     <a class="nav-link nav-link-toggle {{ Request::is('admin/products/list/vendor*')||(Request::is('admin/products/view/vendor/*'))||Request::is('admin/products/updated-product-list') ? 'active' : '' }}"
                        href="javascript:" title="{{ translate('vendor_Products') }}">
                         <i class="fi fi-sr-seller"></i>
@@ -425,7 +425,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <li>
                     <a class="nav-link {{ Request::is('admin/products/product-gallery') ? 'active' : '' }}"
                        href="{{ route('admin.products.product-gallery') }}" title="{{ translate('product_gallery') }}">
@@ -659,7 +659,7 @@
                     Request::is('admin/transaction/wallet-bonus') ||
                     Request::is('admin/report/order')) ? 'scroll-here' : ''
                     }}
-
+{{-- 
                 @if(getCheckAddonPublishedStatus(moduleName: 'TaxModule'))
                     @foreach(include(base_path("Modules/TaxModule/Addon/tax_report_routes.php")) as $route)
                         {{ strstr(Request::url(), $route['path']) ? 'scroll-here' : '' }}
@@ -670,7 +670,7 @@
                             @endforeach
                         @endif
                     @endforeach
-                @endif
+                @endif --}}
                 ">
                     <small class="nav-subtitle" title="">
                         {{ translate('reports_&_Analysis') }}
@@ -751,7 +751,7 @@
                     </a>
                 </li>
 
-                @if(getCheckAddonPublishedStatus(moduleName: 'TaxModule'))
+                {{-- @if(getCheckAddonPublishedStatus(moduleName: 'TaxModule'))
                     @foreach(include(base_path("Modules/TaxModule/Addon/tax_report_routes.php")) as $route)
                         <li>
                             <a class="nav-link
@@ -771,7 +771,7 @@
                             </a>
                         </li>
                     @endforeach
-                @endif
+                @endif --}}
             @endif
 
             @if (Helpers::module_permission_check('blog_management'))
@@ -876,7 +876,7 @@
                     </ul>
                 </li>
 
-                <li class="{{ Request::is('admin/vendors*') || Request::is('admin/vendors/withdraw-method/*') || (Request::is('admin/orders/details/*') && request()->has('vendor-order-list')) ? 'sub-menu-opened' : '' }}">
+                {{-- <li class="{{ Request::is('admin/vendors*') || Request::is('admin/vendors/withdraw-method/*') || (Request::is('admin/orders/details/*') && request()->has('vendor-order-list')) ? 'sub-menu-opened' : '' }}">
                     <a class="nav-link nav-link-toggle {{ Request::is('admin/vendors*') || Request::is('admin/vendors/withdraw-method/*') || (Request::is('admin/orders/details/*') && request()->has('vendor-order-list')) ? 'active' : '' }}"
                        href="javascript:" title="{{ translate('vendors') }}">
                         <i class="fi fi-sr-seller"></i>
@@ -921,7 +921,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li class="{{ Request::is('admin/delivery-man*') ? 'sub-menu-opened' : '' }}">
                     <a class="nav-link nav-link-toggle text-capitalize {{ Request::is('admin/delivery-man*') ? 'active' : '' }}"
@@ -1043,7 +1043,7 @@
                 </li>
 
 
-                @if(getCheckAddonPublishedStatus(moduleName: 'TaxModule'))
+                {{-- @if(getCheckAddonPublishedStatus(moduleName: 'TaxModule'))
                     <li>
                         <a class="nav-link nav-link-toggle
                         @foreach(include(base_path("Modules/TaxModule/Addon/tax_routes.php")) as $route)
@@ -1075,7 +1075,7 @@
                             @endforeach
                         </ul>
                     </li>
-                @endif
+                @endif --}}
 
 
                 <li>
@@ -1259,7 +1259,7 @@
                     </a>
                 </li>
 
-                <li>
+                {{-- <li>
                     <a class="nav-link
                 {{ Request::is('admin/third-party/firebase-configuration/setup') ||
                     Request::is('admin/third-party/firebase-configuration/authentication') ? 'active' : '' }}"
@@ -1270,7 +1270,7 @@
                             {{ translate('Firebase') }}
                         </span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li>
                     <a class="nav-link {{ Request::is('admin/third-party/analytics-index') ? 'active' : '' }}"
@@ -1283,7 +1283,7 @@
                     </a>
                 </li>
 
-                @if(getCheckAddonPublishedStatus(moduleName: 'AI'))
+                {{-- @if(getCheckAddonPublishedStatus(moduleName: 'AI'))
                     <li>
                         <a class="nav-link nav-link-toggle {{
                                 Request::is('admin/third-party/ai-setting') || Request::is('admin/third-party/ai-setting/vendors-usage-limits') ? 'active' : '' }}"
@@ -1297,7 +1297,7 @@
                             </span>
                         </a>
                     </li>
-                @endif
+                @endif --}}
 
                 <li>
                     <a class="nav-link {{ Request::is('admin/third-party/mail') ||

@@ -235,6 +235,7 @@
                 <li class="nav-item nav-item_title {{ (Request::is('admin/brand*') || Request::is('admin/category*') || Request::is('admin/sub*') || Request::is('admin/attribute*') || Request::is('admin/products*')) ? 'scroll-here' : '' }}">
                     <small class="nav-subtitle" title="">{{ translate('product_management') }}</small>
                 </li>
+                
                 <li class="{{ (Request::is('admin/category*') || Request::is('admin/sub-category*') || Request::is('admin/sub-sub-category*'))  ? 'sub-menu-opened' : '' }}">
                     <a class="nav-link nav-link-toggle {{ (Request::is('admin/category*') || Request::is('admin/sub-category*') || Request::is('admin/sub-sub-category*')) ? 'active' : '' }}"
                        href="javascript:" title="{{ translate('category_Setup') }}">

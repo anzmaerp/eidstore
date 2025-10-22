@@ -376,7 +376,7 @@
                             </div>
                         </div>
 
-                        <div class="card card-sm shadow-1">
+                        {{-- <div class="card card-sm shadow-1">
                             <div class="card-header">
                                 <h3>{{ translate('Business_Model_Setup') }}</h3>
                                 <p class="mb-0 fs-12">
@@ -420,7 +420,7 @@
                                                                     <a href="{{ route('admin.business-settings.inhouse-shop') }}" target="_blank" class="text-decoration-underline fw-semibold">
                                                                         {{ translate('In_house_Shop_Settings') }}
                                                                     </a>
-                                                                </span>
+                                                                </span> 
                                                             </div>
                                                         </div>
                                                     </div>
@@ -474,7 +474,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="card card-sm shadow-1">
                             <div class="card-header">

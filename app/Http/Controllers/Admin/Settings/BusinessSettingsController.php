@@ -126,6 +126,7 @@ class BusinessSettingsController extends BaseController
 
     public function updateSettings(BusinessSettingRequest $request, BusinessSettingService $businessSettingService): RedirectResponse
     {
+
         if ($request['email_verification'] == 1) {
             $request['phone_verification'] = 0;
         } elseif ($request['phone_verification'] == 1) {
@@ -151,7 +152,7 @@ class BusinessSettingsController extends BaseController
         $this->businessSettingRepo->updateOrInsert(type: 'currency_symbol_position', value: $request['currency_symbol_position']);
         $this->businessSettingRepo->updateOrInsert(type: 'decimal_point_settings', value: $request['decimal_point_settings'] ?? 0);
 
-        $this->businessSettingRepo->updateOrInsert(type: 'business_mode', value: $request['business_mode']);
+        $this->businessSettingRepo->updateOrInsert(type: 'business_mode', value: 'single');
         $this->businessSettingRepo->updateOrInsert(type: 'sales_commission', value: $request->get('sales_commission', 0));
 
 

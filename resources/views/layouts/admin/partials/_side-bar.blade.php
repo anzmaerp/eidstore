@@ -709,14 +709,14 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link {{ Request::is('admin/report/vendor-report') ? 'active' : '' }}"
                                href="{{ route('admin.report.vendor-report') }}" title="{{ translate('vendor_Sales') }}">
                                 <span class="text-truncate text-capitalize">
                                     {{ translate('vendor_Sales') }}
                                 </span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a class="nav-link {{ (Request::is('admin/transaction/order-transaction-list') || Request::is('admin/transaction/expense-transaction-list') || Request::is('admin/transaction/refund-transaction-list') || Request::is('admin/report/transaction/refund-transaction-list') || Request::is('admin/transaction/wallet-bonus')) ? 'active' : '' }}"
                                href="{{ route('admin.transaction.order-transaction-list') }}"

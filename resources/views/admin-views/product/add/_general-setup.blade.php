@@ -22,22 +22,6 @@
             </div>
             <div class="card-body">
                 <div class="row gy-4">
-                    <div class="col-md-6 col-lg-4 col-xl-3">
-                        <div class="form-group">
-                            <label class="form-label">
-                                {{ translate('product_Type') }}
-                                <span class="input-required-icon">*</span>
-                            </label>
-                            <div class="select-wrapper">
-                                <select name="product_type" id="product_type" class="form-select" required>
-                                    <option value="physical" selected>{{ translate('physical') }}</option>
-                                    @if($digitalProductSetting)
-                                        <option value="digital">{{ translate('digital') }}</option>
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="col-md-6 col-lg-4 col-xl-3">
                         <div class="form-group">
@@ -90,6 +74,23 @@
                                     {{ translate('select_Sub_Sub_Category') }}
                                 </option>
                             </select>
+                        </div>
+                    </div>
+
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="form-group d-none">
+                            <label class="form-label">
+                                {{ translate('product_Type') }}
+                                <span class="input-required-icon">*</span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select name="product_type" id="product_type" class="form-select" required>
+                                    <option value="physical" selected>{{ translate('physical') }}</option>
+                                    @if($digitalProductSetting)
+                                        <option value="digital">{{ translate('digital') }}</option>
+                                    @endif
+                                </select>
+                            </div>
                         </div>
                     </div>
                     @if($brandSetting)

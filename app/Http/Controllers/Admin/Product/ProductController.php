@@ -9,12 +9,12 @@ use App\Contracts\Repositories\BrandRepositoryInterface;
 use App\Contracts\Repositories\CartRepositoryInterface;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\ColorRepositoryInterface;
+use App\Contracts\Repositories\CustomerRepositoryInterface;
 use App\Contracts\Repositories\DealOfTheDayRepositoryInterface;
 use App\Contracts\Repositories\DigitalProductAuthorRepositoryInterface;
 use App\Contracts\Repositories\DigitalProductVariationRepositoryInterface;
 use App\Contracts\Repositories\FlashDealProductRepositoryInterface;
 use App\Contracts\Repositories\ProductRepositoryInterface;
-use App\Contracts\Repositories\CustomerRepositoryInterface;
 use App\Contracts\Repositories\ProductSeoRepositoryInterface;
 use App\Contracts\Repositories\PublishingHouseRepositoryInterface;
 use App\Contracts\Repositories\RestockProductCustomerRepositoryInterface;
@@ -39,8 +39,8 @@ use App\Services\ProductService;
 use App\Traits\FileManagerTrait;
 use App\Traits\ProductTrait;
 use App\Utils\CartManager;
-use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Carbon\Carbon;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -55,41 +55,38 @@ class ProductController extends BaseController
 {
     use ProductTrait;
     use VatTaxManagement;
-
     use FileManagerTrait {
         delete as deleteFile;
         update as updateFile;
     }
 
     public function __construct(
-        private readonly AuthorRepositoryInterface                  $authorRepo,
-        private readonly DigitalProductAuthorRepositoryInterface    $digitalProductAuthorRepo,
-        private readonly DigitalProductPublishingHouseRepository    $digitalProductPublishingHouseRepo,
-        private readonly PublishingHouseRepositoryInterface         $publishingHouseRepo,
-        private readonly CategoryRepositoryInterface                $categoryRepo,
-        private readonly BrandRepositoryInterface                   $brandRepo,
-        private readonly ProductRepositoryInterface                 $productRepo,
-        private readonly CustomerRepositoryInterface                $customerRepo,
-        private readonly RestockProductRepositoryInterface          $restockProductRepo,
-        private readonly RestockProductCustomerRepositoryInterface  $restockProductCustomerRepo,
+        private readonly AuthorRepositoryInterface $authorRepo,
+        private readonly DigitalProductAuthorRepositoryInterface $digitalProductAuthorRepo,
+        private readonly DigitalProductPublishingHouseRepository $digitalProductPublishingHouseRepo,
+        private readonly PublishingHouseRepositoryInterface $publishingHouseRepo,
+        private readonly CategoryRepositoryInterface $categoryRepo,
+        private readonly BrandRepositoryInterface $brandRepo,
+        private readonly ProductRepositoryInterface $productRepo,
+        private readonly CustomerRepositoryInterface $customerRepo,
+        private readonly RestockProductRepositoryInterface $restockProductRepo,
+        private readonly RestockProductCustomerRepositoryInterface $restockProductCustomerRepo,
         private readonly DigitalProductVariationRepositoryInterface $digitalProductVariationRepo,
-        private readonly StockClearanceProductRepositoryInterface   $stockClearanceProductRepo,
-        private readonly StockClearanceSetupRepositoryInterface     $stockClearanceSetupRepo,
-        private readonly ProductSeoRepositoryInterface              $productSeoRepo,
-        private readonly VendorRepositoryInterface                  $sellerRepo,
-        private readonly ColorRepositoryInterface                   $colorRepo,
-        private readonly AttributeRepositoryInterface               $attributeRepo,
-        private readonly TranslationRepositoryInterface             $translationRepo,
-        private readonly CartRepositoryInterface                    $cartRepo,
-        private readonly WishlistRepositoryInterface                $wishlistRepo,
-        private readonly FlashDealProductRepositoryInterface        $flashDealProductRepo,
-        private readonly DealOfTheDayRepositoryInterface            $dealOfTheDayRepo,
-        private readonly ReviewRepositoryInterface                  $reviewRepo,
-        private readonly BannerRepositoryInterface                  $bannerRepo,
-        private readonly ProductService                             $productService,
-    )
-    {
-    }
+        private readonly StockClearanceProductRepositoryInterface $stockClearanceProductRepo,
+        private readonly StockClearanceSetupRepositoryInterface $stockClearanceSetupRepo,
+        private readonly ProductSeoRepositoryInterface $productSeoRepo,
+        private readonly VendorRepositoryInterface $sellerRepo,
+        private readonly ColorRepositoryInterface $colorRepo,
+        private readonly AttributeRepositoryInterface $attributeRepo,
+        private readonly TranslationRepositoryInterface $translationRepo,
+        private readonly CartRepositoryInterface $cartRepo,
+        private readonly WishlistRepositoryInterface $wishlistRepo,
+        private readonly FlashDealProductRepositoryInterface $flashDealProductRepo,
+        private readonly DealOfTheDayRepositoryInterface $dealOfTheDayRepo,
+        private readonly ReviewRepositoryInterface $reviewRepo,
+        private readonly BannerRepositoryInterface $bannerRepo,
+        private readonly ProductService $productService,
+    ) {}
 
     /**
      * @param Request|null $request
@@ -207,7 +204,7 @@ class ProductController extends BaseController
 
     public function updateProductAuthorAndPublishingHouse(object|array $request, object|array $product): void
     {
-        if ($request['product_type'] == 'digital') {
+        if ('physical' == 'digital') {
             if ($request->has('authors')) {
                 $authorIds = [];
                 foreach ($request['authors'] as $author) {
@@ -400,12 +397,12 @@ class ProductController extends BaseController
                     ]);
                 }
 
-                if ($request['product_type'] == 'physical' || $request['digital_product_type'] == 'ready_after_sell') {
+                if ('physical' == 'physical' || $request['digital_product_type'] == 'ready_after_sell') {
                     $variation = $this->digitalProductVariationRepo->getFirstWhere(params: ['product_id' => $product['id'], 'variant_key' => $variation['variant_key']]);
                     if ($variation && $variation['file']) {
                         $this->digitalProductVariationRepo->updateByParams(params: ['id' => $variation['id']], data: ['file' => '']);
                     }
-                    if ($request['product_type'] == 'physical') {
+                    if ('physical' == 'physical') {
                         $variation->delete();
                     }
                 }
@@ -519,7 +516,7 @@ class ProductController extends BaseController
         return response()->json([
             'status' => $success,
             'data' => $data,
-            'message' => $success ? translate("status_updated_successfully") : translate("status_updated_failed") . ' ' . translate("Product_must_be_approved"),
+            'message' => $success ? translate('status_updated_successfully') : translate('status_updated_failed') . ' ' . translate('Product_must_be_approved'),
         ], 200);
     }
 
@@ -752,13 +749,13 @@ class ProductController extends BaseController
         })->flatten()->unique();
         $validTaxIds = \Modules\TaxModule\app\Models\Tax::whereIn('id', $allTaxIds)->pluck('id')->toArray();
         $rowsToInsert = [];
-        \Modules\TaxModule\app\Models\Taxable::where('taxable_type',' App\Models\Product')->whereIn('taxable_id', $products->pluck('id')->toArray() ?? [0])->delete();
+        \Modules\TaxModule\app\Models\Taxable::where('taxable_type', ' App\Models\Product')->whereIn('taxable_id', $products->pluck('id')->toArray() ?? [0])->delete();
         foreach ($products as $product) {
             $taxIds = explode(',', $dataArray['productsTax'][$product->code]);
             foreach ($taxIds as $taxId) {
-                if(in_array($taxId, $validTaxIds)) {
+                if (in_array($taxId, $validTaxIds)) {
                     $rowsToInsert[] = [
-                        'taxable_type' =>  'App\Models\Product',
+                        'taxable_type' => 'App\Models\Product',
                         'taxable_id' => $product->id,
                         'system_tax_setup_id' => $SystemTaxVat->id,
                         'tax_id' => $taxId,
@@ -773,7 +770,6 @@ class ProductController extends BaseController
         }
         ToastMagic::success($dataArray['message']);
         return back();
-
     }
 
     public function updatedProductList(Request $request): View
@@ -924,7 +920,6 @@ class ProductController extends BaseController
         } else {
             return response()->json(['status' => 'multiple_product', 'product_count' => $products->count()]);
         }
-
     }
 
     public function getMultipleProductDetailsView(Request $request): JsonResponse
@@ -1045,5 +1040,4 @@ class ProductController extends BaseController
         ];
         return Excel::download(new RestockProductListExport($data), 'restock-product-list.xlsx');
     }
-
 }

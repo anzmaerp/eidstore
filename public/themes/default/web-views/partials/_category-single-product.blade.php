@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="quick-view">
-                    <div class="d-none d-md-flex gap-2 align-items-center quick-view-tag">
+                    {{-- <div class="d-none d-md-flex gap-2 align-items-center quick-view-tag">
                         @if($product->product_type == 'digital')
                             <div class="bg-white btn-circle" style="--size: 26px" data-toggle="tooltip" title="{{ translate('Digital_Product') }}" data-placement="left">
                                 <img class="h-16px aspect-1 svg" src="{{theme_asset(path: "public/assets/front-end/img/icons/digital-product.svg")}}" alt="">
@@ -34,7 +34,7 @@
                                 <img class="h-16px aspect-1 svg" src="{{theme_asset(path: "public/assets/front-end/img/icons/physical-product.svg")}}" alt="">
                             </div>
                         @endif
-                    </div>
+                    </div> --}}
                     <a class="btn-circle stopPropagation action-product-quick-view" href="javascript:" data-product-id="{{ $product->id }}">
                         <i class="czi-eye align-middle"></i>
                     </a>

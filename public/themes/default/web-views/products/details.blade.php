@@ -46,7 +46,7 @@
                                         </div>
                                         <div class="cz-product-gallery-icons">
                                             <div class="d-flex flex-column gap-12px pt-3">
-                                                @if($product->product_type == "physical")
+                                                {{-- @if($product->product_type == "physical")
                                                 <div class="bg-white btn-circle border" style="--size: 35px" data-toggle="tooltip" title="{{ translate('Physical_Product') }}" data-placement="left">
                                                     <img class="h-16px aspect-1 svg" src="{{theme_asset(path: "public/assets/front-end/img/icons/physical-product.svg")}}" alt="">
                                                 </div>
@@ -54,7 +54,7 @@
                                                     <div class="bg-white btn-circle border" style="--size: 35px" data-toggle="tooltip" title="{{ translate('Digital_Product') }}" data-placement="left">
                                                         <img class="h-16px aspect-1 svg" src="{{theme_asset(path: "public/assets/front-end/img/icons/digital-product.svg")}}" alt="">
                                                     </div>
-                                                @endif
+                                                @endif --}}
                                                 <button type="button" data-product-id="{{ $product['id'] }}"
                                                     class="btn __text-18px border position-static rounded-circle wishList-pos-btn d-sm-none product-action-add-wishlist">
                                                     <i class="fa {{($wishlistStatus == 1?'fa-heart':'fa-heart-o') }} wishlist_icon_{{ $product['id'] }} web-text-primary"

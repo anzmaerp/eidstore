@@ -154,15 +154,20 @@
                     </h4>
 
                     {{-- Add to Cart Button --}}
-                    <div class="mt-2">
-                        <button class="btn btn--primary string-limit product-add-to-cart-button"
-                                type="button"
-                                data-form=".add-to-cart-details-form"
-                                data-update="{{ translate('update_cart') }}"
-                                data-add="{{ translate('add_to_cart') }}">
-                            {{ translate('add_to_cart') }}
-                        </button>
-                    </div>
+<div class="mt-2 product-cart-option-container"> {{-- Added a container for consistency --}}
+    <form class="product-list-add-to-cart-form">
+        {{-- Hidden input for Product ID is crucial for the server --}}
+        <input type="hidden" name="id" value="{{ $product->id }}">
+        {{-- Hidden input for quantity, assuming default is 1 for a list view --}}
+        <input type="hidden" name="quantity" value="1">
+        {{-- The actual Add to Cart button --}}
+        <button class="btn btn--primary string-limit product-add-to-cart-button" type="button"
+            data-form=".product-list-add-to-cart-form" data-update="{{ translate('update_cart') }}"
+            data-add="{{ translate('add_to_cart') }}">
+            {{ translate('add_to_cart') }}
+        </button>
+    </form>
+</div>
                 </div>
             </div>
         </div>

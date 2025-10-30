@@ -70,20 +70,18 @@
                     </span>
                 </h4>
 
-<div class="mt-2 product-cart-option-container"> {{-- Added a container for consistency --}}
-    <form class="product-list-add-to-cart-form">
-        {{-- Hidden input for Product ID is crucial for the server --}}
-        <input type="hidden" name="id" value="{{ $product->id }}">
-        {{-- Hidden input for quantity, assuming default is 1 for a list view --}}
-        <input type="hidden" name="quantity" value="1">
-        {{-- The actual Add to Cart button --}}
-        <button class="btn btn--primary string-limit product-add-to-cart-button" type="button"
-            data-form=".product-list-add-to-cart-form" data-update="{{ translate('update_cart') }}"
-            data-add="{{ translate('add_to_cart') }}">
-            {{ translate('add_to_cart') }}
-        </button>
-    </form>
-</div>
+                <form class="add-to-cart-details-form" action="{{ route('cart.add') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $product->id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="variant" value="">
+                    <button class="btn btn--primary string-limit product-add-to-cart-button"
+                        type="button"
+                        data-update="{{ translate('update_cart') }}"
+                        data-add="{{ translate('add_to_cart') }}">
+                        {{ translate('add_to_cart') }}
+                    </button>
+                </form>
             </div>
             @if($overallRating[0] != 0)
                 <div class="rating-show justify-content-between text-center mt-1">

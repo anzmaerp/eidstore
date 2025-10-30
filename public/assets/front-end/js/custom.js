@@ -1228,22 +1228,11 @@ function commonFunctionalityForProductView() {
         }
     });
 
-        $(document).on("click", ".product-add-to-cart-button", function () {
-            // 1. Find the closest form to the clicked button
-            let clickedForm = $(this).closest('form');
-            
-            // 2. Check if a form was found (for product list)
-            if (clickedForm.length) {
-                // Use the form we just found
-                addToCart(clickedForm);
-            } else {
-                // Fallback to the general form (e.g., if this button exists outside the new structure)
-                // You might need to adjust this depending on the context, but finding the parent form is best.
-                let parentElement = $(this).closest('.product-cart-option-container');
-                let productCartForm = parentElement.find('.addToCartDynamicForm');
-                addToCart(productCartForm.length ? productCartForm : $(".add-to-cart-details-form"));
-            }
-        });
+    $(document).on("click", ".product-add-to-cart-button", function () {
+        let parentElement = $(this).closest('.product-cart-option-container');
+        let productCartForm = parentElement.find('.addToCartDynamicForm');
+        addToCart(productCartForm.length ? productCartForm : $(".add-to-cart-details-form"));
+    });
 
     $(".product-action-add-wishlist").on("click", function () {
         let id = $(this).data("product-id");

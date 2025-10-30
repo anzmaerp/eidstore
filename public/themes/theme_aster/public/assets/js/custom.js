@@ -562,9 +562,16 @@ quickViewDefaultFunctionality();
 
 function addToCartOnclick() {
     $(".product-add-to-cart-button").on("click", function () {
-        let parentElement = $(this).closest('.product-cart-option-container');
-        let productCartForm = parentElement.find('.addToCartDynamicForm');
-        addToCart(productCartForm ?? $(".add-to-cart-details-form"));
+        let form =
+            $(this).closest('.addToCartDynamicForm').length
+                ? $(this).closest('.addToCartDynamicForm')
+                : $(this).closest('.product-cart-option-container').find('.addToCartDynamicForm');
+
+        if (form.length === 0) {
+            form = $(".add-to-cart-details-form");
+        }
+
+        addToCart(form);
     });
 }
 

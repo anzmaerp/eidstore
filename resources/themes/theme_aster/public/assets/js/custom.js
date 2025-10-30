@@ -479,6 +479,7 @@ shareOnSocialMedia();
 function checkAddToCartValidity(formSelector = ".add-to-cart-details-form") {
     let names = {};
     $(formSelector).find("input:radio").each(function () {
+        if (radios.length === 0) return true;
         names[$(this).attr("name")] = true;
     });
     let count = 0;
@@ -592,32 +593,33 @@ function hideProductDetailsStickySection() {
 }
 
 function addToCart(formSelector, redirectToCheckout = false, url = null) {
-    let hasVariantOptions = $(formSelector).find('.product-variant-input').length > 0;
-
-    if (!hasVariantOptions || checkValidityForVariantPrice(formSelector)) {
+    console.log('test5');
+    if (checkValidityForVariantPrice(formSelector)) {
         $.ajaxSetup({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="_token"]').attr("content"),
             },
         });
+
+       let existCartItem = $(formSelector).find('.product-exist-in-cart-list[name="key"]').val();
         let formActionUrl = $(formSelector).attr("action");
-        let existCartItem = $(formSelector).find('.product-exist-in-cart-list[name="key"]').val();
-        if (existCartItem && existCartItem.trim() !== "" && !redirectToCheckout) {
-            const updateUrl = $("#update_quantity_url").data("url");
-            if(updateUrl) formActionUrl = updateUrl;
+        if (existCartItem !== "" && !redirectToCheckout) {
+            formActionUrl = $("#update_quantity_url").data("url");
         }
 
         $.post({
             url: formActionUrl,
             data: $(formSelector).serializeArray().concat({
-                name: "buy_now",
-                value: redirectToCheckout ? 1 : 0,
-            }),
+                    name: "buy_now",
+                    value: redirectToCheckout ? 1 : 0,
+                }),
+            beforeSend: function () {},
             success: function (response) {
-                console.log(response);
                 if (response.status === 2) {
-                    hideProductDetailsStickySection();
-                    $("#buyNowModal-body").html(response.shippingMethodHtmlView);
+                    hideProductDetailsStickySection()
+                    $("#buyNowModal-body").html(
+                        response.shippingMethodHtmlView
+                    );
                     $("#quickViewModal").modal("hide");
                     $("#buyNowModal").modal("show");
                     return false;
@@ -633,7 +635,7 @@ function addToCart(formSelector, redirectToCheckout = false, url = null) {
 
                     let actionAddToCartBtn = $(".product-add-to-cart-button");
                     if (response.in_cart_key) {
-                        $('.product-exist-in-cart-list[name="key"]').val(response.in_cart_key);
+                       $(formSelector).find('.product-exist-in-cart-list[name="key"]').val(response.in_cart_key);
                         actionAddToCartBtn.html(actionAddToCartBtn.data("update"));
                     }
 
@@ -656,7 +658,8 @@ function addToCart(formSelector, redirectToCheckout = false, url = null) {
                     });
                     return false;
                 }
-            }
+            },
+            complete: function () {},
         });
     } else if (parseInt($(formSelector).find("input[name=quantity]").val()) === 0) {
         toastr.warning($(formSelector).data("outofstock"), {
@@ -672,7 +675,6 @@ function addToCart(formSelector, redirectToCheckout = false, url = null) {
         });
     }
 }
-
 
 function updateNavCart() {
     let url = $("#update_nav_cart_url").data("url");
@@ -1968,6 +1970,7 @@ function getRequestForProductRestock(formElement) {
             $("#loading").addClass("d-grid");
         },
         success: function (response) {
+            console.log(response)
             responseManager(response)
             button.attr('disabled', true);
             button.text(button.data('requested'));

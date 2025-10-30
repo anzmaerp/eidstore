@@ -174,6 +174,8 @@ class CartController extends Controller
 
     public function addToCart(Request $request): JsonResponse|RedirectResponse
     {
+        dd($request->all());
+
         $cart = CartManager::add_to_cart($request);
         if ($cart['status'] == 2) {
             $cart['shippingMethodHtmlView'] = view(VIEW_FILE_NAMES['product_shipping_method_modal_view_partials'], [

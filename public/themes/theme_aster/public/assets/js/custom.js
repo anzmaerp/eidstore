@@ -592,6 +592,7 @@ function hideProductDetailsStickySection() {
 }
 
 function addToCart(formSelector, redirectToCheckout = false, url = null) {
+    console.log('test1');
     if (checkValidityForVariantPrice(formSelector)) {
         $.ajaxSetup({
             headers: {

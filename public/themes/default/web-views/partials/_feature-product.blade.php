@@ -52,7 +52,7 @@
                        {{ getProductPriceByType(product: $product, type: 'discounted_unit_price', result: 'string') }}
                    </span>
                     </h4>
-                    <form class="add-to-cart-details-form" action="{{ route('cart.add') }}" method="post">
+                    {{-- <form class="add-to-cart-details-form" action="{{ route('cart.add') }}" method="post">
                         @csrf
                         <input type="hidden" name="id" value="{{ $product->id }}">
                         <input type="hidden" name="quantity" value="1">
@@ -63,7 +63,7 @@
                             data-add="{{ translate('add_to_cart') }}">
                             {{ translate('add_to_cart') }}
                         </button>
-                    </form>
+                    </form> --}}
                 </div>
                 @if($overallRating[0] != 0)
                     <div class="rating-show justify-content-between">

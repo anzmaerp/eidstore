@@ -453,11 +453,12 @@ class CartManager
 
         $user = Helpers::getCustomerInformation($request);
         $guestId = session('guest_id') ?? ($request->guest_id ?? 0);
-        dd($product['current_stock'],$request['quantity'] );
+        dd($product);
+        // dd($product['current_stock'],$request['quantity'] );
 
-        // if (($product['product_type'] == 'physical') && ($product['current_stock'] < $request['quantity'])) {
-        //     return ['status' => 0, 'message' => translate('out_of_stock!')];
-        // }
+        if (($product['product_type'] == 'physical') && ($product['current_stock'] < $request['quantity'])) {
+            return ['status' => 0, 'message' => translate('out_of_stock!')];
+        }
 
         if ($product['minimum_order_qty'] > $request['quantity']) {
             return ['status' => 0, 'message' => translate('Minimum_order_quantity').' '. $product['minimum_order_qty']];
@@ -746,6 +747,7 @@ class CartManager
         $product = Product::with(['digitalVariation', 'clearanceSale' => function ($query) {
             return $query->active();
         }])->where(['id' => $request['id']])->first();
+
 
         if($product['status'] == 0){
             return ['status' => 0, 'message' => translate('Product_is_unavailable')];

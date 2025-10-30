@@ -1105,20 +1105,28 @@ function addToCart(
     redirect_to_checkout = false,
     url = null
 ) {
+    console.log(formSelector);
     if (checkValidityForVariantPrice(formSelector)) {
         $.ajaxSetup({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="_token"]').attr("content"),
             },
         });
-
+        
         let existCartItem = $('.product-exist-in-cart-list[name="key"]').val();
         let redirectToCheckoutValue = redirect_to_checkout.toString();
-
+        
         let formActionUrl = $("#route-cart-add").data("url");
         if (existCartItem !== "" && !redirect_to_checkout) {
             formActionUrl = $("#route-cart-updateQuantity-guest").data("url");
         }
+        console.log($(formSelector)
+                .serializeArray()
+                .concat({
+                    name: "buy_now",
+                    value: redirect_to_checkout ? 1 : 0,
+                }));
+
 
         $.post({
             url: formActionUrl,

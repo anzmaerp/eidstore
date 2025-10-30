@@ -1,5 +1,4 @@
 @php($overallRating = getOverallRating($product?->reviews))
-
 <div class="product-single-hover style--card">
     <div class="overflow-hidden position-relative">
         <div class="inline_product clickable d-flex justify-content-center">
@@ -69,20 +68,22 @@
                         {{ getProductPriceByType(product: $product, type: 'discounted_unit_price', result: 'string') }}
                     </span>
                 </h4>
-
-            <form class="add-to-cart-details-form" action="{{ route('cart.add') }}" method="post">
-                @csrf
-                <input type="hidden" name="id" value="{{ $product->id }}">
-                <input type="hidden" name="quantity" value="1">
-                <input type="hidden" name="variant" value=""> 
-                <input type="hidden" class="product-exist-in-cart-list" name="key" value="">
-                <button class="btn btn--primary string-limit product-add-to-cart-button"
-                    type="button"
-                    data-update="{{ translate('update_cart') }}"
-                    data-add="{{ translate('add_to_cart') }}">
-                    {{ translate('add_to_cart') }}
-                </button>
-            </form>
+                {{-- <form class="cart add-to-cart-details-form addToCartDynamicForm" action="{{ route('cart.add') }}"
+                    data-errormessage="{{translate('please_choose_all_the_options')}}"
+                    data-outofstock="{{translate('sorry_out_of_stock') . '.'}}">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $product->id }}">
+                    <input type="hidden" name="quantity" value="1">
+                <input type="hidden" class="product-generated-variation-code"
+                        name="product_variation_code"
+                        data-product-id="{{ $product->id }}">
+                <input type="hidden" value=""
+                        class="product-exist-in-cart-list form-control w-50" name="key">
+                    <button class="btn btn-primary fs-16 text-capitalize product-add-to-cart-button" type="button"
+                        data-update="{{ translate('update_cart') }}" data-add="{{ translate('add_to_cart') }}">
+                        {{ translate('add_to_cart') }}
+                    </button>
+                </form> --}}
             </div>
             @if($overallRating[0] != 0)
                 <div class="rating-show justify-content-between text-center mt-1">

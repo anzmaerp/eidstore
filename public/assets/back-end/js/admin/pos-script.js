@@ -1027,6 +1027,7 @@ function getVariantPrice(type = null) {
 }
 
 function addToCart(form_id = "add-to-cart-form") {
+    console.log('test2');
     if (checkAddToCartValidity()) {
         $.ajaxSetup({
             headers: {

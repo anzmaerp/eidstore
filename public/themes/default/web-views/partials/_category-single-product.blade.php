@@ -81,16 +81,18 @@
                         {{ getProductPriceByType(product: $product, type: 'discounted_unit_price', result: 'string') }}
                     </span>
                 </h4>
-<div class="product-cart-option-container">
-    <form class="addToCartDynamicForm">
-        @csrf
-        <input type="hidden" name="id" value="{{ $product->id }}">
-        <input type="hidden" name="quantity" value="1">
-        <button type="button" class="btn btn--primary btn-sm product-add-to-cart-button">
-            <i class="fa fa-shopping-cart"></i> {{ translate('add_to_cart') }}
-        </button>
-    </form>
-</div>
+                <div class="product-cart-option-container">
+                    <form class="addToCartDynamicForm">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="button" class="btn btn--primary btn-sm product-add-to-cart-button"
+                            data-form=".addToCartDynamicForm" data-add="{{ translate('add_to_cart') }}"
+                            data-update="{{ translate('update_cart') }}">
+                            <i class="fa fa-shopping-cart"></i> {{ translate('add_to_cart') }}
+                        </button>
+                    </form>
+                </div>
 
             </div>
         </div>

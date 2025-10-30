@@ -453,10 +453,11 @@ class CartManager
 
         $user = Helpers::getCustomerInformation($request);
         $guestId = session('guest_id') ?? ($request->guest_id ?? 0);
+        dd($product['current_stock'],$request['quantity'] );
 
-        if (($product['product_type'] == 'physical') && ($product['current_stock'] < $request['quantity'])) {
-            return ['status' => 0, 'message' => translate('out_of_stock!')];
-        }
+        // if (($product['product_type'] == 'physical') && ($product['current_stock'] < $request['quantity'])) {
+        //     return ['status' => 0, 'message' => translate('out_of_stock!')];
+        // }
 
         if ($product['minimum_order_qty'] > $request['quantity']) {
             return ['status' => 0, 'message' => translate('Minimum_order_quantity').' '. $product['minimum_order_qty']];

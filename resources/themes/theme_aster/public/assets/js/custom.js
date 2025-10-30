@@ -600,10 +600,12 @@ function addToCart(formSelector, redirectToCheckout = false, url = null) {
                 "X-CSRF-TOKEN": $('meta[name="_token"]').attr("content"),
             },
         });
-            let existCartItem = $(formSelector).find('.product-exist-in-cart-list[name="key"]').val();
-            if (existCartItem && existCartItem.trim() !== "" && !redirectToCheckout) {
-                formActionUrl = $("#update_quantity_url").data("url");
-            }
+        let formActionUrl = $(formSelector).attr("action");
+        let existCartItem = $(formSelector).find('.product-exist-in-cart-list[name="key"]').val();
+        if (existCartItem && existCartItem.trim() !== "" && !redirectToCheckout) {
+            const updateUrl = $("#update_quantity_url").data("url");
+            if(updateUrl) formActionUrl = updateUrl;
+        }
 
         $.post({
             url: formActionUrl,
@@ -612,6 +614,7 @@ function addToCart(formSelector, redirectToCheckout = false, url = null) {
                 value: redirectToCheckout ? 1 : 0,
             }),
             success: function (response) {
+                console.log(response);
                 if (response.status === 2) {
                     hideProductDetailsStickySection();
                     $("#buyNowModal-body").html(response.shippingMethodHtmlView);

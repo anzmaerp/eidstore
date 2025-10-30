@@ -453,7 +453,7 @@ class CartManager
 
         $user = Helpers::getCustomerInformation($request);
         $guestId = session('guest_id') ?? ($request->guest_id ?? 0);
-        dd($product);
+        // dd($product);
         // dd($product['current_stock'],$request['quantity'] );
 
         if (($product['product_type'] == 'physical') && ($product['current_stock'] < $request['quantity'])) {

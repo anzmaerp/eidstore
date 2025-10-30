@@ -52,6 +52,15 @@
                        {{ getProductPriceByType(product: $product, type: 'discounted_unit_price', result: 'string') }}
                    </span>
                     </h4>
+                    <div class="mt-2">
+                        <button class="btn btn--primary string-limit product-add-to-cart-button"
+                                type="button"
+                                data-form=".add-to-cart-details-form"
+                                data-update="{{ translate('update_cart') }}"
+                                data-add="{{ translate('add_to_cart') }}">
+                            {{ translate('add_to_cart') }}
+                        </button>
+                    </div>
                 </div>
                 @if($overallRating[0] != 0)
                     <div class="rating-show justify-content-between">

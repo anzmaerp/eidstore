@@ -17,9 +17,8 @@
                 </div>
             @endif
             <div class="d-flex pb-0">
-                <a href="{{route('product',$product->slug)}}" class="w-100 rounded">
-                    <img alt=""
-                         src="{{ getStorageImages(path: $product->thumbnail_full_url, type: 'product') }}">
+                <a href="{{route('product', $product->slug)}}" class="w-100 rounded">
+                    <img alt="" src="{{ getStorageImages(path: $product->thumbnail_full_url, type: 'product') }}">
                 </a>
             </div>
 
@@ -28,13 +27,13 @@
             @endif
         </div>
         <div class="single-product-details">
-            @if($overallRating[0] != 0 )
+            @if($overallRating[0] != 0)
                 <div class="rating-show justify-content-between text-center">
                     <span class="d-inline-block font-size-sm text-body">
-                        @for($inc=1;$inc<=5;$inc++)
-                            @if ($inc <= (int)$overallRating[0])
+                        @for($inc = 1; $inc <= 5; $inc++)
+                            @if ($inc <= (int) $overallRating[0])
                                 <i class="tio-star text-warning"></i>
-                            @elseif ($overallRating[0] != 0 && $inc <= (int)$overallRating[0] + 1.1 && $overallRating[0] > ((int)$overallRating[0]))
+                            @elseif ($overallRating[0] != 0 && $inc <= (int) $overallRating[0] + 1.1 && $overallRating[0] > ((int) $overallRating[0]))
                                 <i class="tio-star-half text-warning"></i>
                             @else
                                 <i class="tio-star-outlined text-warning"></i>
@@ -45,26 +44,33 @@
                 </div>
             @endif
             <h3 class="text-center mb-1 letter-spacing-0">
-                <a href="{{route('product',$product->slug)}}">
+                <a href="{{route('product', $product->slug)}}">
                     {{ $product['name'] }}
                 </a>
             </h3>
             <div class="justify-content-between text-center">
-                <h4 class="product-price text-center d-flex flex-wrap justify-content-center align-items-center gap-8 mb-0 letter-spacing-0">
+                <h4
+                    class="product-price text-center d-flex flex-wrap justify-content-center align-items-center gap-8 mb-0 letter-spacing-0">
                     @if($product->discount > 0)
                         <del class="category-single-product-price fs-14 fw-bold">
                             {{ webCurrencyConverter(amount: $product->unit_price) }}
                         </del>
                     @endif
                     <span class="text-accent text-dark fs-15">
-                        {{ webCurrencyConverter(amount:
-                            $product->unit_price-(getProductDiscount(product: $product, price: $product->unit_price))
-                        ) }}
+                        {{ webCurrencyConverter(
+    amount:
+    $product->unit_price - (getProductDiscount(product: $product, price: $product->unit_price))
+) }}
                     </span>
                 </h4>
+                <div class="mt-2">
+                    <button class="btn btn--primary string-limit product-add-to-cart-button" type="button"
+                        data-form=".add-to-cart-details-form" data-update="{{ translate('update_cart') }}"
+                        data-add="{{ translate('add_to_cart') }}">
+                        {{ translate('add_to_cart') }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
